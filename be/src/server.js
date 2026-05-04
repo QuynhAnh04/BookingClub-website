@@ -5,6 +5,8 @@ import routes from './routes/route.js';
 import cors from 'cors';
 import sportComplexRouter from './routes/sport_complex.route.js';
 import cookieParser from "cookie-parser";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 dotenv.config();
 
@@ -50,3 +52,19 @@ app.use('/api/v1/sportcomplex', sportComplexRouter);
 app.listen(PORT, () => {
   console.log("Server is running on port", PORT);
 });
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "API Documentation",
+      version: "1.0.0",
+      description: "Tài liệu API tự động cập nhật cho dự án",
+    },
+    servers: [{ url: "http://localhost:5001" }],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
