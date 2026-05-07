@@ -14,7 +14,7 @@ const ProfilePage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Partial<User>>({});
 
-  // --- STATE CHO AVATAR ---
+  // --- STATE CHO AVATAR (GIỮ NGUYÊN LOGIC API) ---
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -80,7 +80,7 @@ const ProfilePage: React.FC = () => {
     if (fileInputRef.current) fileInputRef.current.value = ""; 
   };
 
-const handleLogout = async () => {
+  const handleLogout = async () => {
     if (window.confirm("Bạn có chắc chắn muốn đăng xuất?")) {
       try {
         await logoutApi(); 
@@ -119,8 +119,9 @@ const handleLogout = async () => {
         submitData.append("removeAvatar", "true"); 
       }
 
-      console.log( Object.fromEntries(submitData.entries()));
+      console.log(Object.fromEntries(submitData.entries()));
       
+      // Giả lập lưu vào Context tạm thời
       setUser({ ...user, ...formData, avatar: avatarPreview } as User); 
       setIsEditing(false); 
       alert("Cập nhật hồ sơ thành công!");
@@ -129,7 +130,7 @@ const handleLogout = async () => {
     }
   };
 
-  if (loading) return <div className="loading-text" style={{textAlign: "center", padding: "50px"}}>Đang tải dữ liệu...</div>;
+  if (loading) return <div className="loading-container">Đang tải dữ liệu...</div>;
   if (!user) return null;
 
   return (
@@ -158,10 +159,10 @@ const handleLogout = async () => {
                   <img 
                     src={avatarPreview} 
                     alt="Avatar" 
-                    style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} 
+                    className="avatar-img"
                   />
                 ) : (
-                  <Image size={28} color="#5a6b8a" />
+                  <Image size={24} color="#9ca3af" />
                 )}
               </div>
               
@@ -172,7 +173,7 @@ const handleLogout = async () => {
                     accept="image/*" 
                     ref={fileInputRef} 
                     onChange={handleFileChange} 
-                    style={{ display: "none" }} 
+                    className="hidden-file-input"
                   />
                   <button className="btn-upload" onClick={handleUploadClick}>Tải lên</button>
                   <button className="btn-delete" onClick={handleDeleteAvatar}>Xóa</button>
@@ -218,11 +219,11 @@ const handleLogout = async () => {
             <div className="profile-col-label">Cá nhân hóa</div>
             <div className="profile-col-value personal-col">
               <div className="personal-item">
-                <Map size={18} />
+                <Map size={16} />
                 <div className="personal-info">
-                  <strong>Vị trí của bạn:</strong>
+                  <strong>Vị trí:</strong>
                   {isEditing ? (
-                    <input type="text" name="location" value={formData.location || ""} onChange={handleChange} className="edit-input small-input" />
+                    <input type="text" name="location" value={formData.location || ""} onChange={handleChange} className="edit-input" />
                   ) : (
                     <span>{user.location || "Chưa có dữ liệu"}</span>
                   )}
@@ -230,11 +231,11 @@ const handleLogout = async () => {
               </div>
 
               <div className="personal-item">
-                <Award size={18} />
+                <Award size={16} />
                 <div className="personal-info">
-                  <strong>Môn thể thao và trình độ:</strong>
+                  <strong>Trình độ:</strong>
                   {isEditing ? (
-                    <input type="text" name="sportLevel" value={formData.sportLevel || ""} onChange={handleChange} className="edit-input small-input" />
+                    <input type="text" name="sportLevel" value={formData.sportLevel || ""} onChange={handleChange} className="edit-input" />
                   ) : (
                     <span>{user.sportLevel || "Chưa có dữ liệu"}</span>
                   )}
@@ -242,11 +243,11 @@ const handleLogout = async () => {
               </div>
 
               <div className="personal-item">
-                <Target size={18} />
+                <Target size={16} />
                 <div className="personal-info">
                   <strong>Mục tiêu:</strong>
                   {isEditing ? (
-                    <input type="text" name="goal" value={formData.goal || ""} onChange={handleChange} className="edit-input small-input" />
+                    <input type="text" name="goal" value={formData.goal || ""} onChange={handleChange} className="edit-input" />
                   ) : (
                     <span>{user.goal || "Chưa có dữ liệu"}</span>
                   )}
@@ -254,8 +255,8 @@ const handleLogout = async () => {
               </div>
               
               {!isEditing && (
-                <span className="corner-edit-icon">
-                  <SquarePen size={18} color="#5a6b8a" />
+                <span className="corner-edit-icon" onClick={() => setIsEditing(true)}>
+                  <SquarePen size={18} color="#3d5a80" />
                 </span>
               )}
             </div>
@@ -273,13 +274,8 @@ const handleLogout = async () => {
         
         {/* Nút Đăng Xuất */}
         {!isEditing && (
-          <div style={{ padding: "20px", textAlign: "right", backgroundColor: "#aeb4be" }}>
-            <button 
-              onClick={handleLogout} 
-              style={{ padding: "10px 24px", backgroundColor: "white", color: "#ef4444", border: "1px solid #ef4444", borderRadius: "6px", fontWeight: "bold", cursor: "pointer", transition: "0.2s" }}
-              onMouseOver={(e) => { e.currentTarget.style.backgroundColor = "#fee2e2"; }}
-              onMouseOut={(e) => { e.currentTarget.style.backgroundColor = "white"; }}
-            >
+          <div className="profile-logout-wrapper">
+            <button className="btn-logout" onClick={handleLogout}>
               Đăng Xuất
             </button>
           </div>
