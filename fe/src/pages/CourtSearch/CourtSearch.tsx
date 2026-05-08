@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SearchBar from "../../components/common/SearchBar/SearchBar";
 import CourtSearchCard from "../../components/common/CourtSearchCard/CourtSearchCard";
 import Pagination from "../../components/common/Pagination/Pagination";
@@ -24,20 +24,8 @@ interface SearchResponse {
   };
 }
 
-interface SearchParams {
-  keyword: string;
-  city: string;
-  district: string;
-  fieldTypes: string;
-}
-
 function CourtSearch() {
-  const [searchParams, setSearchParams] = useState<SearchParams>({
-    keyword: "",
-    city: "",
-    district: "",
-    fieldTypes: ""
-  });
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<CourtItem[]>([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,28 +33,56 @@ function CourtSearch() {
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 9;
 
-  useEffect(() => {
-    void fetchCourts(searchParams, 1);
-  }, []);
+  const mergeUniqueCourts = (groups: CourtItem[][]) => {
+    const map = new Map<string, CourtItem>();
 
-  const fetchCourts = async (params: SearchParams, targetPage: number) => {
+    groups.flat().forEach((court) => {
+      if (!map.has(court.id)) {
+        map.set(court.id, court);
+      }
+    });
+
+    return Array.from(map.values());
+  };
+
+  const fetchCourts = async (keyword: string, targetPage: number) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await axios.get<SearchResponse>('/api/v1/sportcomplex/search', {
-        params: {
-          keyword: params.keyword.trim(),
-          city: params.city.trim(),
-          district: params.district.trim(),
-          fieldTypes: params.fieldTypes.trim(),
-          page: targetPage,
-          limit: pageSize
-        }
-      });
+      const normalizedKeyword = keyword.trim();
 
-      setResults(response.data.sportComplexes);
-      setTotalPages(response.data.pagination.totalPages);
+      if (!normalizedKeyword) {
+        setResults([]);
+        setTotalPages(0);
+        setPage(1);
+        return;
+      }
+
+      const requestConfigs = [
+        { keyword: normalizedKeyword },
+        { city: normalizedKeyword },
+        { district: normalizedKeyword },
+        { fieldTypes: normalizedKeyword }
+      ];
+
+      const responses = await Promise.all(
+        requestConfigs.map((params) =>
+          axios.get<SearchResponse>('/api/v1/sportcomplex/search', {
+            params: {
+              ...params,
+              page: targetPage,
+              limit: pageSize
+            }
+          })
+        )
+      );
+
+      const mergedCourts = mergeUniqueCourts(responses.map((response) => response.data.sportComplexes));
+      const maxPages = Math.max(...responses.map((response) => response.data.pagination.totalPages), 0);
+
+      setResults(mergedCourts);
+      setTotalPages(maxPages);
       setPage(targetPage);
     } catch (err: any) {
       console.error('Search failed:', err);
@@ -78,12 +94,13 @@ function CourtSearch() {
     }
   };
 
-  const handleSearch = async () => {
-    await fetchCourts(searchParams, 1);
+  const handleSearch = async (nextQuery: string) => {
+    setQuery(nextQuery);
+    await fetchCourts(nextQuery, 1);
   };
 
   const handlePageChange = async (newPage: number) => {
-    await fetchCourts(searchParams, newPage);
+    await fetchCourts(query, newPage);
   };
 
   return (
@@ -93,15 +110,9 @@ function CourtSearch() {
         <p>Tìm sân theo tên hoặc vị trí</p>
       </header>
 
-      <SearchBar 
-        keyword={searchParams.keyword}
-        city={searchParams.city}
-        district={searchParams.district}
-        fieldTypes={searchParams.fieldTypes}
-        onKeywordChange={(value) => setSearchParams((prev) => ({ ...prev, keyword: value }))}
-        onCityChange={(value) => setSearchParams((prev) => ({ ...prev, city: value }))}
-        onDistrictChange={(value) => setSearchParams((prev) => ({ ...prev, district: value }))}
-        onFieldTypesChange={(value) => setSearchParams((prev) => ({ ...prev, fieldTypes: value }))}
+      <SearchBar
+        value={query}
+        onChange={setQuery}
         onSearch={handleSearch}
         isLoading={isLoading}
       />
@@ -118,9 +129,15 @@ function CourtSearch() {
         </div>
       )}
 
-      {!isLoading && results.length === 0 && !error && Object.values(searchParams).some((value) => value.trim()) && (
+      {!isLoading && results.length === 0 && !error && query && (
         <div style={{ padding: '40px', textAlign: 'center', color: '#999' }}>
           Không tìm thấy sân nào phù hợp
+        </div>
+      )}
+
+      {!isLoading && results.length === 0 && !error && !query && (
+        <div style={{ padding: '40px', textAlign: 'center', color: '#999' }}>
+          Nhập tên sân, từ khóa, thành phố, quận/huyện hoặc môn thể thao để tìm kiếm.
         </div>
       )}
 
@@ -133,10 +150,10 @@ function CourtSearch() {
           </div>
 
           {totalPages > 1 && (
-            <Pagination 
-              page={page} 
-              totalPages={totalPages} 
-              onChange={handlePageChange} 
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              onChange={handlePageChange}
             />
           )}
         </section>
