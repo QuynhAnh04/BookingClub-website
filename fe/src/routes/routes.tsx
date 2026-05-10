@@ -7,6 +7,8 @@ import CourtDetailGalleryDemo from "../pages/CourtDetail/CourtDetailGalleryDemo"
 import BookingTest from "../pages/BookingForm/BookingTest.tsx"
 import CheckoutPage from "../pages/CheckoutPage/CheckoutPage.tsx"
 import CourtSearch from "../pages/CourtSearch/CourtSearch"
+import Booking from "../pages/BookingTest/Booking.tsx"
+import PaymentSuccess from "../pages/Payment/PaymentSuccess.tsx"
 
 function AppRoutes() {
   return (
@@ -16,9 +18,12 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/me" element={<Me />} />
       <Route path="/court-detail-demo" element={<CourtDetailGalleryDemo />} />
-      <Route path="/BookingTest" element={<BookingTest />} />
-      <Route path="/checkout" element={<CheckoutPage />} />
+      {/* <Route path="/Booking" element={<Booking />} /> */}
+      {/* <Route path="/checkout" element={<CheckoutPage />} /> */}
+      <Route path="/complexes/:complexId/booking" element={<Booking />} />
+      <Route path="/complexes/:complexId/booking/confirm" element={<CheckoutPage />} />
       <Route path="/courts/search" element={<CourtSearch />} />
+      <Route path="/payment/success" element={<PaymentSuccess />} />
     </Routes>
   )
 }
