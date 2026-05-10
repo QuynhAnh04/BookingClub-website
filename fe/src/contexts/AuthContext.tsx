@@ -1,6 +1,7 @@
 import React, { createContext, useEffect } from "react";
 // import { getMeApi } from "../services/auth.api";
 
+
 export interface User {
     _id: string;
     email: string;
