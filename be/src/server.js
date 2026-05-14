@@ -2,9 +2,14 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import express from 'express';
 import routes from './routes/route.js';
+import paymentRouter from './routes/payment.route.js';
+import bookingRouter from './routes/booking.route.js';
 import cors from 'cors';
 import sportComplexRouter from './routes/sport_complex.route.js';
 import cookieParser from "cookie-parser";
+import { cancelExpiredBookings } from './services/payment.service.js';
+import subFieldRouter from './routes/subfield.route.js';
+import { completeFinishedBookings } from "./services/booking.service.js";
 
 dotenv.config();
 
@@ -40,13 +45,32 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('Hello, World!');
+  res.send('Hello, World!');
 });
 app.use('/api/v1', routes);
+app.use('/api/v1', paymentRouter);
+app.use('/api/v1/bookings', bookingRouter);
 app.use('/api/v1/sportcomplex', sportComplexRouter);
-
+app.use('/api/v1/subfield', subFieldRouter);
 
 
 app.listen(PORT, () => {
   console.log("Server is running on port", PORT);
 });
+
+setInterval(async () => {
+  try {
+    await cancelExpiredBookings();
+  } catch (err) {
+    console.error(err);
+  }
+}, 60 * 1000);
+
+setInterval(async () => {
+  try {
+    await completeFinishedBookings();
+    console.log("completed booking check finished");
+  } catch (err) {
+    console.error(err);
+  }
+}, 24 * 60 * 60 * 1000);

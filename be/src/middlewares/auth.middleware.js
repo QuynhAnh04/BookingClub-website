@@ -17,6 +17,11 @@ const publicRoutes = [
 
     { method: "GET", path: "/api/v1/sportcomplex" },
     { method: "GET", path: "/api/v1/sportcomplex/" }, // để match /sportcomplex/:slug
+
+    { method: "GET", path: "/api/v1/subfield/calculate-price" },
+    { method: "GET", path: "/api/v1/subfield/:subField_id/available-time-slots" },
+
+    { method: "GET", path: "/api/v1/payments/vnpay/return" },
 ];
 
 const isPublicRoute = (req) => {
@@ -31,6 +36,15 @@ const isPublicRoute = (req) => {
         // match dynamic route (ví dụ /reviews/:id)
         if (route.path.endsWith("/") && requestPath.startsWith(route.path)) {
             return true;
+        }
+
+        // dynamic route match
+        if (route.path.includes(":")) {
+            const routeRegex = new RegExp(
+                "^" + route.path.replace(/:\w+/g, "[^/]+") + "$"
+            );
+
+            return routeRegex.test(requestPath);
         }
 
         return false;

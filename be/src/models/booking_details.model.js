@@ -15,6 +15,10 @@ const bookingDetailsSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    price:{
+        type: Number,
+        required: true
+    },
     start_time:{
         type: String,
         required: true
@@ -24,5 +28,15 @@ const bookingDetailsSchema = new mongoose.Schema({
         required: true
     }
 });
+
+bookingDetailsSchema.index(
+  {
+    sub_field_id: 1,
+    play_date: 1,
+    start_time: 1,
+    end_time: 1,
+  },
+  { unique: true }
+);
 
 export default mongoose.model("BookingDetails", bookingDetailsSchema);
