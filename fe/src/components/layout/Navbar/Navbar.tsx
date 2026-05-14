@@ -20,7 +20,7 @@ function Navbar() {
         <div className={`navbar-right ${mobileMenuOpen ? "active" : ""}`}>
           <nav className="navbar-links">
 
-            <Link to="/courts/search">
+            <Link to="/complexes/search">
               Tìm kiếm sân
             </Link>
 
