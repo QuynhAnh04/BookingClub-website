@@ -1,0 +1,190 @@
+.hero-section {
+  /* margin-top: 40px; */
+
+  background: linear-gradient(
+    135deg,
+    #4e7ec7 0%,
+    #7fa6df 100%
+  );
+
+  /* border-radius: 32px; */
+
+  padding: 80px 60px;
+
+  color: white;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 60px;
+}
+
+.hero-left {
+  flex: 1;
+}
+
+.hero-tag {
+  display: inline-block;
+
+  background: rgba(255, 255, 255, 0.18);
+
+  padding: 10px 18px;
+
+  border-radius: 999px;
+
+  margin-bottom: 24px;
+
+  font-size: 0.9rem;
+}
+
+.hero-left h1 {
+  font-size: 3.2rem;
+
+  line-height: 1.15;
+
+  margin-bottom: 20px;
+  color: white;
+}
+
+.hero-left p {
+  font-size: 1.05rem;
+
+  line-height: 1.8;
+
+  max-width: 550px;
+
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.hero-buttons {
+  margin-top: 34px;
+
+  display: flex;
+  gap: 18px;
+}
+
+.hero-primary-btn,
+.hero-secondary-btn {
+  border: none;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.hero-primary-btn {
+  background-color: white;
+  color: #2f5fa7;
+
+  padding: 14px 28px;
+
+  border-radius: 12px;
+}
+
+.hero-primary-btn:hover {
+  transform: translateY(-3px);
+  color: white;
+}
+
+.hero-secondary-btn {
+  background-color: transparent;
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+
+  color: white;
+
+  padding: 14px 28px;
+
+  border-radius: 12px;
+}
+
+.hero-secondary-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hero-right {
+  width: 420px;
+
+  position: relative;
+}
+
+.hero-right img {
+  width: 100%;
+  height: 320px;
+
+  object-fit: cover;
+
+  border-radius: 24px;
+
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.hero-court-info {
+  position: absolute;
+
+  bottom: 20px;
+  left: 20px;
+
+  background: rgba(255, 255, 255, 0.15);
+
+  backdrop-filter: blur(10px);
+
+  padding: 18px;
+
+  border-radius: 18px;
+}
+
+.hero-court-info h3 {
+  color: white;
+}
+
+/* .hero-search {
+  margin-top: 40px;
+
+  background-color: white;
+
+  padding: 24px;
+
+  border-radius: 24px;
+} */
+
+/* RESPONSIVE */
+
+@media (max-width: 950px) {
+  .hero-content {
+    flex-direction: column;
+  }
+
+  .hero-right {
+    width: 100%;
+  }
+
+  .hero-left h1 {
+    font-size: 2.3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-section {
+    padding: 28px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-primary-btn,
+  .hero-secondary-btn {
+    width: 100%;
+  }
+}
