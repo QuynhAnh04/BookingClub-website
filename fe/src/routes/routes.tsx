@@ -7,7 +7,6 @@ import CheckoutPage from "../pages/CheckoutPage/CheckoutPage.tsx"
 import ProfilePage from "../pages/Profile/ProfilePage.tsx"
 import CourtSearch from "../pages/CourtSearch/CourtSearch"
 import Booking from "../pages/BookingTest/Booking.tsx"
-import BookingTest from "../pages/BookingForm/BookingTest.tsx"
 import PaymentSuccess from "../pages/Payment/PaymentSuccess.tsx"
 import PaymentFailed from "../pages/Payment/PaymentFailed.tsx"
 import HomePage from "../pages/HomePage/HomePage.tsx"
@@ -23,14 +22,11 @@ function AppRoutes() {
 
       <Route path="/profile" element={<ProfilePage />} /> {/* Đổi URL thành /profile */}
       {/* ================================ */}
-      <Route path="/complexes/:complexId" element={<CourtDetailGalleryDemo />} />
-      {/* <Route path="/Booking" element={<Booking />} /> */}
+      {/* <Route path="/complexes/:complexId" element={<CourtDetailGalleryDemo />} /> */}
       <Route path="/complexes/:slug" element={<CourtInfo />} />
-      {/* <Route path="/checkout" element={<CheckoutPage />} /> */}
-      <Route path="/complexes/:complexId/booking" element={<Booking />} />
       <Route path="/complexes/:complexId/booking/confirm" element={<CheckoutPage />} />
       <Route path="/search" element={<CourtSearch />} />
-      <Route path="/courts/search" element={<CourtSearch />} />
+      <Route path="/complexes/search" element={<CourtSearch />} />
       <Route path="/payment/success" element={<PaymentSuccess />} />
       <Route path="/payment/failed" element={<PaymentFailed />} />
     </Routes>
