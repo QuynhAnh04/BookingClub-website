@@ -50,6 +50,11 @@ instance.interceptors.response.use(
         // Do something with response error
         const originalRequest = error.config;
 
+        // Check if originalRequest and url exist
+        if (!originalRequest || !originalRequest.url) {
+            return Promise.reject(error);
+        }
+
         // Nếu là refresh thì không retry nữa
         if (originalRequest.url.includes("/refresh")) {
             return Promise.reject(error);

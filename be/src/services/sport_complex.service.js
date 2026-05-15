@@ -183,6 +183,27 @@ const searchSportComplexService = async (keyword, city, district, fieldType, pag
     }
   });
 
+  pipeline.push({
+    $lookup: {
+      from: FieldImage.collection.name,
+      let: { complexId: "$_id" },
+      pipeline: [
+        { $match: { $expr: { $eq: ["$complex_id", "$$complexId"] } } },
+        { $sort: { is_primary: -1, created_at: 1 } },
+        {
+          $project: {
+            _id: 0,
+            image_url: 1,
+            image_type: 1,
+            is_primary: 1,
+            alt_text: 1
+          }
+        }
+      ],
+      as: "fieldImages"
+    }
+  });
+
   fieldType = fieldType.trim().toLowerCase();
   // 4. Lọc theo Loại sân (Field Type)
   // Vì FE gửi về 1 môn thể thao cụ thể (fieldType)
