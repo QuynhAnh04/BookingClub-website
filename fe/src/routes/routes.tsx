@@ -9,10 +9,12 @@ import Booking from "../pages/BookingTest/Booking.tsx"
 import BookingTest from "../pages/BookingForm/BookingTest.tsx"
 import PaymentSuccess from "../pages/Payment/PaymentSuccess.tsx"
 import PaymentFailed from "../pages/Payment/PaymentFailed.tsx"
+import HomePage from "../pages/HomePage/HomePage.tsx"
 
 function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/me" element={<Me />} />

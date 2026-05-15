@@ -47,7 +47,7 @@ const Login: React.FC = () => {
         {
           await fetchMe();
           alert("Đăng nhập thành công");
-        navigate("/home");
+        navigate("/");
         }
         
       } catch (error: any) {
