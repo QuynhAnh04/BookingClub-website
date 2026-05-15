@@ -57,9 +57,21 @@ const logoutApi = (): Promise<LogoutResponse> => {
   return axios.post("/api/v1/logout");
 };
 
+// Cập nhật thông tin cơ bản (Gửi JSON thuần)
+const updateMeApi = (data: { name?: string; avatar_url?: string; date_of_birth?: string | Date }) => {
+  return axios.put("/api/v1/me/update", data);
+};
+
+// Đổi mật khẩu
+const updatePasswordApi = (data: any) => {
+  return axios.patch("/api/v1/me/update-password", data);
+};
+
 export {
   createUserApi,
   loginApi,
   getMeApi,
-  logoutApi
+  logoutApi,
+  updateMeApi,
+  updatePasswordApi
 };

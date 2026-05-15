@@ -36,7 +36,7 @@ export default function PaymentFailed() {
           </div>
         </div>
 
-        <button className="payment-btn" onClick={() => navigate("/courts/search")}>
+        <button className="payment-btn" onClick={() => navigate("/complexes/search")}>
           Đặt sân lại
         </button>
         <button className="payment-btn-outline" onClick={() => navigate("/")}>

@@ -11,6 +11,7 @@ function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
+
     <header className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
@@ -56,7 +57,7 @@ function Navbar() {
               </Link>
             </div>
           ) : (
-            <Link to="/me" className="profile-btn">
+            <Link to="/profile" className="profile-btn">
               <img
                 src={
                   user.avatar_url || avatarPlaceholder
