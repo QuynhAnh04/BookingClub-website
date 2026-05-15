@@ -1,0 +1,19 @@
+.home-white-section-top {
+  background: linear-gradient(
+    to bottom,
+    #f4f4f4 0%,
+    #ffffff 15%,
+    #ffffff 85%,
+    #ffffff 100%
+  );
+}
+
+.home-white-section-bottom {
+  background: linear-gradient(
+    to bottom,
+    #ffffff 0%,
+    #ffffff 15%,
+    #ffffff 80%,
+    #f4f4f4 100%
+  );
+}
