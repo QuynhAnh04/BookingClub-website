@@ -16,12 +16,10 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/me" element={<Me />} />
-      <Route path="/court-detail-demo" element={<CourtDetailGalleryDemo />} />
-      <Route path="/BookingTest" element={<BookingTest />} />
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/search" element={<CourtSearch />} />
+      <Route path="/complexes/:complexId" element={<CourtDetailGalleryDemo />} />
       <Route path="/complexes/:complexId/booking" element={<Booking />} />
       <Route path="/complexes/:complexId/booking/confirm" element={<CheckoutPage />} />
+      <Route path="/search" element={<CourtSearch />} />
       <Route path="/courts/search" element={<CourtSearch />} />
       <Route path="/payment/success" element={<PaymentSuccess />} />
       <Route path="/payment/failed" element={<PaymentFailed />} />
