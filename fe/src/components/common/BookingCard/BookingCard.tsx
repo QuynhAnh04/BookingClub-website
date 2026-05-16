@@ -285,7 +285,8 @@ const BookingCard: React.FC<BookingCardProps> = ({
         courtName: item.courtName, // THÊM: Tên sân để hiển thị Checkout
         startTime: sortedSlots[0].split(' - ')[0],
         endTime: sortedSlots[0].split(' - ')[1],
-        slotCount: 1 // Đếm số slot (30p) để tính tiền
+        slotCount: 1, // Đếm số slot (30p) để tính tiền
+        playDate: item.date
       };
 
       const courtBlocks = [];
@@ -300,11 +301,12 @@ const BookingCard: React.FC<BookingCardProps> = ({
         } else {
           courtBlocks.push({ ...currentBlock });
           currentBlock = {
-            sub_field_id: courtId,
+            sub_field_id: actualCourtId,
             courtName: item.courtName,
             startTime: nextStart,
             endTime: nextEnd,
-            slotCount: 1
+            slotCount: 1,
+            playDate: item.date
           };
         }
       }
@@ -342,7 +344,8 @@ const BookingCard: React.FC<BookingCardProps> = ({
           startTime: block.startTime,
           endTime: block.endTime,
           price: blockPrice,
-          services: detailedServices
+          services: detailedServices,
+          playDate: block.playDate
         });
       });
     });

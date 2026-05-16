@@ -81,7 +81,7 @@
 }
 
 .col-item { flex: 2; text-transform: uppercase; }
-.col-info { flex: 2; text-align: left; }
+.col-info { flex: 1.5; text-align: left; }
 .col-price { flex: 1; text-align: right; }
 
 .fw-bold { font-weight: 700; }
@@ -186,6 +186,10 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   color: #1f2937;
+}
+
+.col-date {
+  flex: 1.2;
 }
 
 .checkout-action-buttons {

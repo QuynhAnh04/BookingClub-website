@@ -3,13 +3,23 @@ import { CalculatePrice, getAvailableTimeSlots } from "../services/subfield.serv
 
 const getCalculatePrice = async (req, res) => {
     try {
-        const { subField_id, playDate, startTime, endTime } = req.body;
+        const {
+            subField_id,
+            playDate,
+            startTime,
+            endTime
+        } = req.query;
+
         const price = await CalculatePrice(subField_id, playDate, startTime, endTime);
+
         return res.json({ price });
+
     } catch (err) {
-        return res.status(400).json({ message: err.message });
+        return res.status(400).json({
+            message: err.message
+        });
     }
-}
+};
 
 const getAvailableSlots = async (req, res) => {
     try {
