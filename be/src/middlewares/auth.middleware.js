@@ -70,6 +70,7 @@ const auth = (req, res, next) => {
         return next();
 
     } catch (error) {
+        console.error("Auth Middleware Error:", error.message);
         return res.status(401).json({
             message: "Invalid/Expired token",
         });

@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { sendMail } from "./email.service.js";
 import { createAccessToken, createRefreshToken } from "../utils/jwt.js"
 

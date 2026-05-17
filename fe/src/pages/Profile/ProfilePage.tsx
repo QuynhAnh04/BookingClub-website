@@ -25,7 +25,7 @@ const ProfilePage: React.FC = () => {
   // Dọn dẹp URL ảo của ảnh preview để tránh rò rỉ bộ nhớ (memory leak)
   useEffect(() => {
     return () => {
-      if (avatarPreview && avatarPreview.startsWith("blob:")) {
+      if (avatarPreview?.startsWith("blob:")) {
         URL.revokeObjectURL(avatarPreview);
       }
     };
@@ -155,8 +155,12 @@ const ProfilePage: React.FC = () => {
 
   // Xác nhận đăng xuất, xóa token ở storage và đẩy về trang Login
   const handleLogout = async () => {
-    if (window.confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-      try { await logoutApi(); } catch (e) {}
+    if (globalThis.confirm("Bạn có chắc chắn muốn đăng xuất?")) {
+      try { await logoutApi(); } catch (error: any) {
+        if (globalThis.location.hostname === 'localhost') {
+          console.error("Xảy ra lỗi khi gọi API đăng xuất:", error);
+        }
+      }
       localStorage.removeItem("access_token");
       localStorage.removeItem("isLoggedIn"); 
       sessionStorage.clear();
@@ -170,6 +174,9 @@ const ProfilePage: React.FC = () => {
     try {
       return new Date(dateValue).toISOString().split('T')[0];
     } catch (error) {
+        if (globalThis.location?.hostname === 'localhost') {
+        console.error("Lỗi format ngày tháng:", error, "Giá trị truyền vào:", dateValue);
+      }
       return "";
     }
   };

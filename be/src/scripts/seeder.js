@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import SportComplex from "../models/sport_complex.model.js";
 import PricingRule from "../models/pricing_rule.model.js";
 import SubField from "../models/sub_field.model.js";

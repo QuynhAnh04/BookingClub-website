@@ -52,7 +52,7 @@ export const login = async (req, res) => {
 
     const rs = await loginService({ phone, password });
 
-    await cookieUtils.setAuthCookies(res, String(rs.user._id), rs.access_token, rs.refresh_token);
+    cookieUtils.setAuthCookies(res, String(rs.user._id), rs.access_token, rs.refresh_token);
 
     return res.json({
       id: rs.user.id,
@@ -85,7 +85,7 @@ export const refreshController = async (req, res) => {
     const result = await refreshTokenService(refreshToken);
 
     // set lại cookie
-    await cookieUtils.setAuthCookies(
+    cookieUtils.setAuthCookies(
       res,
       result.userId,
       result.accessToken,

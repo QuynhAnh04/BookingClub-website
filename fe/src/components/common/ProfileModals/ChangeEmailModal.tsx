@@ -28,14 +28,22 @@ const ChangeEmailModal: React.FC<Props> = ({ currentEmail, onClose, onSave }) =>
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-card" onClick={e => e.stopPropagation()}>
+    <button 
+      type="button"
+      className="modal-overlay" 
+      onClick={(e) => {
+        // Chỉ đóng modal khi user click trực tiếp vào lớp nền overlay
+        if (e.target === e.currentTarget) onClose();
+      }}
+      aria-label="Đóng màn hình đổi mật khẩu"
+    >
+      <div className="modal-card">
         <div className="modal-header">
           <h3>Thay đổi Email</h3>
         </div>
         <div className="modal-body">
           <div className="form-group">
-            <label>Email mới</label>
+            <label htmlFor="newEmail">Email mới</label>
             <input 
               type="email" 
               className="modal-input" 
@@ -45,8 +53,9 @@ const ChangeEmailModal: React.FC<Props> = ({ currentEmail, onClose, onSave }) =>
             />
           </div>
           <div className="form-group">
-            <label>Xác nhận mật khẩu</label>
+            <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
             <input 
+              id="confirmPassword"
               type="password" 
               className="modal-input" 
               value={formData.password}
@@ -66,7 +75,7 @@ const ChangeEmailModal: React.FC<Props> = ({ currentEmail, onClose, onSave }) =>
           </button>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 

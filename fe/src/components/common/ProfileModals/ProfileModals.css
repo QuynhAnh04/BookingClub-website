@@ -7,6 +7,7 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   border: 1px solid #e5e7eb;
   animation: modalAppear 0.3s ease-out;
+  position: relative;
   
   font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji';
 }
@@ -33,28 +34,13 @@
   backdrop-filter: blur(4px); 
 }
 
-/* Card Modal */
-.modal-card {
-  width: 100%;
-  max-width: 420px;
-  background-color: #ffffff;
-  border-radius: 16px; 
-  padding: 32px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e5e7eb;
-  position: relative;
+.modal-overlay:hover {
+  background-color: rgba(30, 58, 95, 0.5);
 }
 
 .modal-header {
   margin-bottom: 24px;
   text-align: center;
-}
-
-.modal-header h3 {
-  margin: 0;
-  color: #1e3a5f;
-  font-size: 22px;
-  font-weight: 800;
 }
 
 .modal-body {
@@ -74,6 +60,7 @@
   font-size: 14px;
   font-weight: 700;
   color: #4b5563;
+  text-align: left;
 }
 
 /* Input đồng bộ với ProfilePage */
@@ -113,7 +100,7 @@
 
 .btn-cancel {
   background-color: #f3f4f6;
-  color: #6b7280;
+  color: #676f7b;
 }
 
 .btn-cancel:hover {

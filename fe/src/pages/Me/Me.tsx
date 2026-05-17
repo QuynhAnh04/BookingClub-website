@@ -9,9 +9,9 @@ function Home() {
 
   const navigate = useNavigate();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {return <p>Loading...</p>;}
 
-   if (!user) return <p>Not logged in</p>;
+  if (!user) {return <p>Not logged in</p>;}
 
 const handleLogout = async () => {
   // Implementation for logout

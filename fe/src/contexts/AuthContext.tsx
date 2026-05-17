@@ -1,4 +1,4 @@
-import React, { createContext, useEffect } from "react";
+import React, { createContext, useEffect, useMemo } from "react";
 import { getMeApi } from "../services/auth.api";
 
 export interface User {
@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = React.useState<User | null>(null);
     const [loading, setLoading] = React.useState<boolean>(true);
 
-    const fetchMe = async () => {
+    const fetchMe = React.useCallback(async () => {
         try {
             setLoading(true);
             
@@ -52,14 +52,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
     
     useEffect(() => {
         fetchMe();
-    }, []); 
+    }, [fetchMe]); 
+
+    const value = useMemo(() => ({ user, setUser, loading, fetchMe }), [user, loading, fetchMe]);
 
     return (
-        <AuthContext.Provider value={{ user, setUser, loading, fetchMe }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );

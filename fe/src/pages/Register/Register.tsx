@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Image } from "lucide-react";
 import InputField from "../../components/layout/InputField/InputField";
 import "./Register.css";
-import "./Register.css";
 import { createUserApi } from "../../services/auth.api";
 
 
@@ -21,8 +20,8 @@ const Register: React.FC = () => {
     confirmPassword: "",
   });
 
-  const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const validateRegisterInput = (data: any) => {
+    const { fullName, email, phone, password, confirmPassword } = data;
     let newErrors = { fullName: "", email: "", phone: "", password: "", confirmPassword: "" };
     let isValid = true;
 
@@ -47,24 +46,39 @@ const Register: React.FC = () => {
 
     if (!confirmPassword) { newErrors.confirmPassword = "Vui lòng xác nhận mật khẩu"; isValid = false; }
     else if (confirmPassword !== password) { newErrors.confirmPassword = "Mật khẩu xác nhận không khớp"; isValid = false; }
+    
+    return {isValid, errors: newErrors};
+};
 
+  const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const { isValid, errors: newErrors } = validateRegisterInput({
+      fullName, email, phone, password, confirmPassword
+    });
     setErrors(newErrors);
 
-    if (isValid) {
+    if (isValid) return;
+
+    if (globalThis.location?.hostname === "localhost") {
       console.log("Dữ liệu đăng ký:", { fullName, email, phone, password });
+    }
 
-      try {
-        await createUserApi(fullName, email, phone, password);
+    if (globalThis.location?.hostname === 'localhost') {
+      console.log("Dữ liệu đăng ký:", { fullName, email, phone, password });
+    }
 
-        alert("Đăng ký hợp lệ! Vui lòng kiểm tra email để kích hoạt tài khoản.");
-      } catch (error: any) {
-        console.log(">>> error: ", error);
-
-        const message =
-          error?.response?.data?.message || "Có lỗi xảy ra";
-
-        alert(message);
+    try {
+      await createUserApi(fullName, email, phone, password);
+      alert("Đăng ký hợp lệ! Vui lòng kiểm tra email để kích hoạt tài khoản.");
+    } catch (error: any) {
+      if (globalThis.location?.hostname === 'localhost') {
+        console.error(">>> Lỗi đăng ký chi tiết hệ thống: ", error);
       }
+      
+      // Lọc sạch log thô, chỉ hiển thị thông báo an toàn ra giao diện
+      const message = error?.response?.data?.message || "Hệ thống gặp sự cố, vui lòng thử lại sau!";
+      alert(message);
     }
   };
 

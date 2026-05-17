@@ -14,6 +14,8 @@ import { completeFinishedBookings } from "./services/booking.service.js";
 dotenv.config();
 
 const app = express();
+app.disable('x-powered-by');
+
 const PORT = process.env.PORT || 5001;
 
 //config cors
