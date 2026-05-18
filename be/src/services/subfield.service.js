@@ -60,9 +60,9 @@ const getAvailableTimeSlots = async (subField_id, playDate) => {
     // 2. Tạo khung mặc định dựa trên thông tin vừa lấy
     let allSlots = generateTimeSlots(openingHour, closingHour, playDate, slotStep);
 
-    console.log("All Slots:", allSlots);
+    // console.log("All Slots:", allSlots);
 
-    console.log(dayjs(playDate).startOf('day').toDate());
+    // console.log(dayjs(playDate).startOf('day').toDate());
     // 3. Lấy các khung đã được đặt cho ngày đó
     const bookedSlots = await TimeSlot.find({
         sub_field_id: subField_id,
@@ -70,12 +70,12 @@ const getAvailableTimeSlots = async (subField_id, playDate) => {
         status: { $in: ["Locked", "Booked", "Maintenance"] }
     });
     
-    console.log("Booked Slots from DB:", bookedSlots);
+    // console.log("Booked Slots from DB:", bookedSlots);
 
     // Chuyển mảng thành Map để tìm kiếm O(1) thay vì O(n)
     const bookedMap = new Map(bookedSlots.map(s => [s.time, s.status]));
 
-    console.log("Booked Map:", bookedMap);
+    // console.log("Booked Map:", bookedMap);
 
     // Merge & kiem tra expired
     const now = dayjs();

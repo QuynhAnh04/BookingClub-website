@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./BookingCard.css";
 import { useNavigate } from 'react-router-dom';
 import {getTimeSlot} from "../../../services/sportDetail.api";
+import { useParams } from "react-router-dom";
 
 // --- INTERFACES ---
 interface TimeSlot {
@@ -73,6 +74,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
     const savedCart = sessionStorage.getItem('bookingCart');
     return savedCart ? JSON.parse(savedCart) : {};
   });
+  const { slug } = useParams();
 
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     const savedDate = sessionStorage.getItem('bookingDate');
@@ -350,6 +352,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
       booking_date: selectedDate,    
       total_price: globalTotalPrice,
       booking_details: formattedBookingDetails,
+      slug: slug
     };
 
     sessionStorage.setItem('pendingBooking', JSON.stringify(bookingPayload));

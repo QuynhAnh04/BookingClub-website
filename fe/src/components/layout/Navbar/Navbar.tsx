@@ -33,7 +33,7 @@ function Navbar() {
               Bản đồ
             </Link>
 
-            <Link to="/complexes/65f1a2b3c4d5e6f7a8b90123/booking">
+            <Link to="/complexes/san-bong-thang-long">
               Test Booking
             </Link>
 

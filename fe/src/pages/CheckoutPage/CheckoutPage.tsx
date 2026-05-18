@@ -166,7 +166,7 @@ const CheckoutPage: React.FC = () => {
             <button
               type="button"
               className="edit-booking-btn"
-              onClick={() => navigate(`/complexes/${bookingData.complex_id}/booking`)}
+              onClick={() => navigate(`/complexes/${bookingData.slug}`)}
               disabled={isProcessing}
             >
               CHỈNH SỬA ĐƠN
@@ -182,7 +182,7 @@ const CheckoutPage: React.FC = () => {
 
                 if (!confirmed) return;
                 sessionStorage.removeItem("pendingBooking");
-                navigate("/courts/search");
+                navigate("/complexes/search");
               }}
               disabled={isProcessing}
             >
