@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './CheckoutPage.css';
 import { useAuth } from "../../contexts/AuthContext";
@@ -6,6 +6,7 @@ import {
   createBookingApi,
   createVnpayPaymentApi
 } from "../../services/booking.api";
+import { calculatePriceApi } from '../../services/subfield.api';
 
 const CheckoutPage: React.FC = () => {
   const { user, loading } = useAuth();
@@ -13,6 +14,9 @@ const CheckoutPage: React.FC = () => {
   const location = useLocation();
   const [bookingData, setBookingData] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const [bookingDetailsWithPrice, setBookingDetailsWithPrice] = useState<any[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     if (loading) return;
@@ -45,6 +49,44 @@ const CheckoutPage: React.FC = () => {
     navigate("/courts/search"); //chuyển về trang search
   }, [loading, user, navigate, location.state]);
 
+  useEffect(() => {
+    const fetchBookingPrices = async () => {
+      if (!bookingData?.booking_details?.length) return;
+
+      try {
+        const detailsWithPrice = await Promise.all(
+          bookingData.booking_details.map(async (detail: any) => {
+            const res = await calculatePriceApi({
+              subField_id: detail.sub_field_id,
+              playDate: detail.playDate,
+              startTime: detail.startTime,
+              endTime: detail.endTime,
+            });
+
+            return {
+              ...detail,
+              price: res.price,
+            };
+          })
+        );
+
+        // tính tổng tiền
+        const total = detailsWithPrice.reduce(
+          (sum, item) => sum + item.price,
+          0
+        );
+
+        setBookingDetailsWithPrice(detailsWithPrice);
+        setTotalPrice(total);
+      } catch (error) {
+        console.error("Lỗi tính tiền sân:", error);
+        alert("Không thể tính giá sân");
+      }
+    };
+
+    fetchBookingPrices();
+  }, [bookingData]);
+
   if (loading) return <p>Loading...</p>;
   if (!user || !bookingData) return null;
 
@@ -57,7 +99,7 @@ const CheckoutPage: React.FC = () => {
         booking_date: new Date().toISOString(),
         booking_details: bookingData.booking_details.map((d: any) => ({
           sub_field_id: d.sub_field_id,
-          play_date: bookingData.booking_date,
+          play_date: d.playDate,
           startTime: d.startTime,
           endTime: d.endTime,
           // Rút trích mảng Object services {id, name, price} về lại mảng string ID ["referee", "racket"]
@@ -92,14 +134,6 @@ const CheckoutPage: React.FC = () => {
 
   if (!bookingData) return null;
 
-  // Cấu hình VietQR
-  // const BANK_ID = "MB"; 
-  // const ACCOUNT_NO = "0987654321"; 
-  // const ACCOUNT_NAME = "NGUYEN CHU SAN";
-  // const AMOUNT = bookingData.total_price;
-  // const DESCRIPTION = `THANH TOAN SAN ${bookingData.booking_date.replace(/-/g, '')}`;
-  // const QR_URL = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${AMOUNT}&addInfo=${encodeURIComponent(DESCRIPTION)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
-
   return (
     <div className="checkout-wrapper">
       <h1 className="checkout-page-title">XÁC NHẬN ĐƠN HÀNG</h1>
@@ -121,18 +155,31 @@ const CheckoutPage: React.FC = () => {
           <div className="details-table-wrapper">
             <div className="details-table-header">
               <div className="col-item">CHI TIẾT ĐƠN</div>
-              <div className="col-info">THÔNG TIN THÊM</div>
+              <div className="col-date">NGÀY CHƠI</div>
+              <div className="col-info">THỜI GIAN</div>
               <div className="col-price">GIÁ</div>
             </div>
 
             <div className="details-table-body">
-              {bookingData.booking_details.map((detail: any, index: number) => (
+              {bookingDetailsWithPrice.map((detail: any, index: number) => (
                 <React.Fragment key={index}>
                   {/* Dòng hiển thị Tiền Sân */}
                   <div className="table-row">
-                    <div className="col-item fw-bold">{detail.courtName}</div>
-                    <div className="col-info">{detail.startTime} - {detail.endTime}</div>
-                    <div className="col-price">{detail.price.toLocaleString('vi-VN')}VND</div>
+                    <div className="col-item fw-bold">
+                      {detail.courtName}
+                    </div>
+
+                    <div className="col-date">
+                      {new Date(detail.playDate).toLocaleDateString("vi-VN")}
+                    </div>
+
+                    <div className="col-info">
+                      {detail.startTime} - {detail.endTime}
+                    </div>
+
+                    <div className="col-price">
+                      {detail.price.toLocaleString("vi-VN")} VND
+                    </div>
                   </div>
 
                   {/* Dòng hiển thị Tiền Dịch vụ (Nếu có) */}
@@ -152,14 +199,14 @@ const CheckoutPage: React.FC = () => {
             <div className="details-total-row">
               <div className="col-item fw-bold">TỔNG TIỀN:</div>
               <div className="col-info"></div>
-              <div className="col-price fw-bold">{bookingData.total_price.toLocaleString('vi-VN')}VND</div>
+              <div className="col-price fw-bold">{totalPrice.toLocaleString("vi-VN")} VND</div>
             </div>
           </div>
         </div>
 
         <div className="checkout-right">
           <div className="total-amount-box">
-            {bookingData.total_price.toLocaleString("vi-VN")} VND
+            {totalPrice.toLocaleString("vi-VN")} VND
           </div>
 
           <div className="checkout-action-buttons">
